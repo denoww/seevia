@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seevia — câmera + IA contra o crime</title>
+  <meta name="description" content="Seevia é a plataforma de câmeras com inteligência artificial que vê o que importa e avisa antes do crime acontecer. Em breve." />
+
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="apple-touch-icon" href="/assets/icon_512.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Seevia — câmera + IA contra o crime" />
+  <meta property="og:description" content="A plataforma de câmeras com IA que vê o ladrão antes dele agir. Em breve." />
+  <meta property="og:image" content="/assets/og.png" />
+  <meta property="og:url" content="https://seevia.com.br" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --azul: #104fd4;
+      --azul-claro: #3a78ff;
+      --escuro: #0b1020;
+      --escuro-2: #111935;
+      --branco: #f5f8ff;
+      --cinza: #9aa6c4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, var(--escuro-2) 0%, var(--escuro) 55%, #060912 100%);
+      color: var(--branco);
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* grade sutil de "vigilância" no fundo */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(58,120,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,120,255,.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(80% 60% at 50% 30%, #000 0%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+      gap: 28px;
+    }
+
+    .logo {
+      width: min(360px, 72vw);
+      height: auto;
+      filter: drop-shadow(0 8px 40px rgba(58,120,255,.35));
+      animation: fade-up .9s ease both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--azul-claro);
+      background: rgba(58,120,255,.10);
+      border: 1px solid rgba(58,120,255,.30);
+      padding: 8px 16px;
+      border-radius: 999px;
+      animation: fade-up .9s .1s ease both;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--azul-claro);
+      box-shadow: 0 0 0 0 rgba(58,120,255,.6);
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 16ch;
+      animation: fade-up .9s .2s ease both;
+    }
+    h1 .grad {
+      background: linear-gradient(90deg, var(--azul-claro), #7aa2ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.sub {
+      font-size: clamp(15px, 2.2vw, 19px);
+      color: var(--cinza);
+      max-width: 52ch;
+      line-height: 1.6;
+      animation: fade-up .9s .3s ease both;
+    }
+
+    .cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fade-up .9s .4s ease both;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-wa {
+      background: #25D366;
+      color: #04210f;
+      box-shadow: 0 8px 30px rgba(37,211,102,.35);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,.04);
+      color: var(--branco);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--cinza);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    footer a { color: var(--azul-claro); text-decoration: none; }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(58,120,255,.5); }
+      70%  { box-shadow: 0 0 0 10px rgba(58,120,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(58,120,255,0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <img class="logo" src="/assets/seevia_branco.png" alt="Seevia" />
+
+    <span class="badge"><span class="dot"></span> Em breve</span>
+
+    <h1>A câmera que <span class="grad">vê o ladrão</span> antes dele agir.</h1>
+
+    <p class="sub">
+      Seevia une câmeras e inteligência artificial para vigiar o que importa,
+      reconhecer ameaças em tempo real e avisar você na hora certa.
+      Estamos finalizando os detalhes — em breve no ar.
+    </p>
+
+    <div class="cta">
+      <a class="btn btn-wa" href="https://wa.me/5562985673142?text=Quero%20saber%20mais%20sobre%20a%20Seevia" target="_blank" rel="noopener">
+        Falar no WhatsApp
+      </a>
+      <a class="btn btn-ghost" href="mailto:contato@seevia.com.br">contato@seevia.com.br</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Seevia · Tecnologia de câmeras com IA · seevia.com.br
+  </footer>
+</body>
+</html>
