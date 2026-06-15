@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seevia — câmera + IA contra o crime</title>
-  <meta name="description" content="Seevia é a plataforma de câmeras com inteligência artificial que vê o que importa e avisa antes do crime acontecer. Em breve." />
+  <title>Seevia — câmeras com IA que veem o crime antes dele acontecer</title>
+  <meta name="description" content="Seevia é a rede de câmeras inteligentes com IA importada do Vale do Silício que lê placas, reconhece ameaças em tempo real e avisa as autoridades antes do crime acontecer." />
 
   <link rel="icon" type="image/png" href="/assets/favicon.png" />
   <link rel="apple-touch-icon" href="/assets/icon_512.png" />
@@ -12,190 +12,776 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Seevia — câmera + IA contra o crime" />
-  <meta property="og:description" content="A plataforma de câmeras com IA que vê o ladrão antes dele agir. Em breve." />
+  <meta property="og:description" content="A rede de câmeras com IA que vê o ladrão antes dele agir. Tecnologia importada direto do Vale do Silício." />
   <meta property="og:image" content="/assets/og.png" />
   <meta property="og:url" content="https://seevia.com.br" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       --azul: #104fd4;
       --azul-claro: #3a78ff;
+      --azul-neon: #7aa2ff;
       --escuro: #0b1020;
       --escuro-2: #111935;
+      --escuro-3: #161f3f;
       --branco: #f5f8ff;
       --cinza: #9aa6c4;
+      --cinza-2: #6b769a;
+      --verde: #25D366;
+      --borda: rgba(255,255,255,.08);
+      --max: 1180px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: radial-gradient(120% 120% at 50% 0%, var(--escuro-2) 0%, var(--escuro) 55%, #060912 100%);
+      background: var(--escuro);
       color: var(--branco);
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+    section { position: relative; z-index: 1; }
 
-    /* grade sutil de "vigilância" no fundo */
+    /* fundo de vigilância */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(58,120,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(58,120,255,.05) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(80% 60% at 50% 30%, #000 0%, transparent 80%);
+        linear-gradient(rgba(58,120,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,120,255,.045) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(90% 60% at 50% 10%, #000 0%, transparent 75%);
       pointer-events: none;
       z-index: 0;
     }
 
-    .wrap {
-      position: relative;
-      z-index: 1;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 48px 24px;
-      gap: 28px;
+    /* ---------- NAV ---------- */
+    header.nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(11,16,32,.72);
+      border-bottom: 1px solid var(--borda);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo img { height: 30px; width: auto; filter: drop-shadow(0 4px 18px rgba(58,120,255,.4)); }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--cinza); transition: color .2s; }
+    .nav-links a:hover { color: var(--branco); }
+    .nav-cta {
+      background: var(--azul); color: #fff; padding: 10px 20px; border-radius: 10px;
+      font-size: 14px; font-weight: 600; transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 6px 22px rgba(16,79,212,.45);
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16,79,212,.6); }
+    .nav-burger { display: none; background: none; border: 0; color: #fff; font-size: 26px; cursor: pointer; }
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .nav-burger { display: block; }
     }
 
-    .logo {
-      width: min(360px, 72vw);
-      height: auto;
-      filter: drop-shadow(0 8px 40px rgba(58,120,255,.35));
-      animation: fade-up .9s ease both;
+    /* ---------- BANNER VALE DO SILÍCIO ---------- */
+    .silicon-banner {
+      position: relative; overflow: hidden;
+      background: linear-gradient(90deg, #0a1d57, var(--azul), #6b2bd6, var(--azul), #0a1d57);
+      background-size: 300% 100%;
+      animation: bannerflow 8s linear infinite;
+      border-bottom: 1px solid rgba(122,162,255,.3);
     }
+    @keyframes bannerflow { to { background-position: 300% 0; } }
+    .silicon-track {
+      display: flex; gap: 56px; white-space: nowrap;
+      padding: 11px 0;
+      animation: marquee 22s linear infinite;
+      will-change: transform;
+    }
+    .silicon-track span {
+      font-size: 13.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 12px;
+      color: #eaf0ff;
+      text-shadow: 0 0 18px rgba(122,162,255,.8);
+    }
+    .silicon-track span::after { content: "✦"; color: var(--azul-neon); font-size: 11px; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--azul-claro);
-      background: rgba(58,120,255,.10);
-      border: 1px solid rgba(58,120,255,.30);
-      padding: 8px 16px;
-      border-radius: 999px;
-      animation: fade-up .9s .1s ease both;
-    }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--azul-claro);
-      box-shadow: 0 0 0 0 rgba(58,120,255,.6);
-      animation: pulse 2s infinite;
-    }
+    /* ---------- HERO ---------- */
+    .hero { padding: 96px 0 64px; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+    @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
 
-    h1 {
-      font-size: clamp(28px, 5vw, 52px);
-      font-weight: 800;
-      line-height: 1.1;
-      max-width: 16ch;
-      animation: fade-up .9s .2s ease both;
+    .pill-live {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 12.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--azul-neon); background: rgba(58,120,255,.1);
+      border: 1px solid rgba(58,120,255,.3); padding: 7px 15px; border-radius: 999px;
     }
-    h1 .grad {
-      background: linear-gradient(90deg, var(--azul-claro), #7aa2ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    p.sub {
-      font-size: clamp(15px, 2.2vw, 19px);
-      color: var(--cinza);
-      max-width: 52ch;
-      line-height: 1.6;
-      animation: fade-up .9s .3s ease both;
-    }
-
-    .cta {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      animation: fade-up .9s .4s ease both;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      padding: 14px 24px;
-      border-radius: 12px;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .btn:hover { transform: translateY(-2px); }
-    .btn-wa {
-      background: #25D366;
-      color: #04210f;
-      box-shadow: 0 8px 30px rgba(37,211,102,.35);
-    }
-    .btn-ghost {
-      background: rgba(255,255,255,.04);
-      color: var(--branco);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-
-    footer {
-      position: relative;
-      z-index: 1;
-      padding: 24px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--cinza);
-      border-top: 1px solid rgba(255,255,255,.06);
-    }
-    footer a { color: var(--azul-claro); text-decoration: none; }
-
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .pill-live .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #25D366;
+      box-shadow: 0 0 0 0 rgba(37,211,102,.6); animation: pulse 2s infinite;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(58,120,255,.5); }
-      70%  { box-shadow: 0 0 0 10px rgba(58,120,255,0); }
-      100% { box-shadow: 0 0 0 0 rgba(58,120,255,0); }
+      0% { box-shadow: 0 0 0 0 rgba(37,211,102,.55); }
+      70% { box-shadow: 0 0 0 12px rgba(37,211,102,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5.4vw, 60px); font-weight: 900; line-height: 1.05;
+      margin: 22px 0 0; letter-spacing: -.02em;
+    }
+    .grad {
+      background: linear-gradient(100deg, var(--azul-claro), var(--azul-neon), #c4d4ff, var(--azul-claro));
+      background-size: 220% auto;
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shine 5s linear infinite;
+    }
+    @keyframes shine { to { background-position: 220% center; } }
+
+    .hero p.sub { font-size: clamp(16px, 2vw, 19px); color: var(--cinza); max-width: 50ch; line-height: 1.65; margin-top: 22px; }
+
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 32px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 600; padding: 15px 26px; border-radius: 12px;
+      transition: transform .15s, box-shadow .15s; cursor: pointer; border: 0;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--azul); color: #fff; box-shadow: 0 10px 30px rgba(16,79,212,.5); }
+    .btn-primary:hover { box-shadow: 0 14px 40px rgba(16,79,212,.7); }
+    .btn-ghost { background: rgba(255,255,255,.04); color: var(--branco); border: 1px solid rgba(255,255,255,.14); }
+    .btn-wa { background: var(--verde); color: #04210f; box-shadow: 0 10px 30px rgba(37,211,102,.35); }
+
+    .hero-trust { margin-top: 30px; display: flex; align-items: center; gap: 14px; color: var(--cinza-2); font-size: 13px; }
+    .avatars { display: flex; }
+    .avatars span {
+      width: 30px; height: 30px; border-radius: 50%; margin-left: -8px; border: 2px solid var(--escuro);
+      background: linear-gradient(135deg, var(--azul-claro), #6b2bd6); display: inline-block;
+    }
+    .stars { color: #ffc857; letter-spacing: 2px; }
+
+    /* mockup câmera */
+    .hero-cam {
+      position: relative; border-radius: 18px; overflow: hidden;
+      background: linear-gradient(160deg, var(--escuro-2), #070b18);
+      border: 1px solid var(--borda); box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .cam-feed { aspect-ratio: 4/3; position: relative; background:
+      radial-gradient(120% 120% at 30% 10%, #1b2a55 0%, #0a1124 55%, #05070f 100%); }
+    .cam-feed::after {
+      content: ""; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(58,120,255,.07) 1px, transparent 1px);
+      background-size: 100% 4px; pointer-events: none; opacity: .5;
+    }
+    .cam-top { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; font-size: 11px; color: #aebbe0; font-weight: 600; letter-spacing: .05em; }
+    .rec { display: inline-flex; align-items: center; gap: 6px; color: #ff6b6b; }
+    .rec b { width: 8px; height: 8px; background: #ff4d4d; border-radius: 50%; animation: pulse-red 1.4s infinite; }
+    @keyframes pulse-red { 50% { opacity: .25; } }
+    .scanbox {
+      position: absolute; width: 120px; height: 78px; border: 2px solid var(--azul-neon);
+      border-radius: 6px; left: 38%; top: 42%;
+      box-shadow: 0 0 0 9999px rgba(5,7,15,.18), 0 0 24px rgba(122,162,255,.6);
+      animation: scanmove 7s ease-in-out infinite;
+    }
+    .scanbox::before {
+      content: "AMEAÇA DETECTADA"; position: absolute; top: -22px; left: -2px;
+      font-size: 9.5px; font-weight: 800; letter-spacing: .08em; color: #04210f;
+      background: var(--azul-neon); padding: 2px 7px; border-radius: 4px;
+    }
+    .scanbox::after {
+      content: "PLACA · BRA2E19"; position: absolute; bottom: -20px; left: -2px;
+      font-size: 9.5px; font-weight: 700; color: var(--azul-neon);
+    }
+    @keyframes scanmove {
+      0%,100% { left: 30%; top: 38%; }
+      50% { left: 50%; top: 50%; }
+    }
+    .cam-strip { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--borda); font-size: 12px; color: var(--cinza); }
+    .cam-strip .ai { display: inline-flex; align-items: center; gap: 7px; color: var(--azul-neon); font-weight: 700; }
+    .cam-strip .ai b { width: 7px; height: 7px; border-radius: 50%; background: var(--azul-neon); animation: pulse-red 1.6s infinite; }
+    .float-card {
+      position: absolute; right: -14px; bottom: 50px; background: rgba(17,25,53,.92);
+      border: 1px solid rgba(122,162,255,.35); border-radius: 14px; padding: 12px 15px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.5); backdrop-filter: blur(8px);
+      animation: float 6s ease-in-out infinite .6s;
+    }
+    .float-card .t { font-size: 11px; color: var(--cinza); font-weight: 600; }
+    .float-card .v { font-size: 16px; font-weight: 800; color: #fff; margin-top: 2px; }
+    @media (max-width: 540px) { .float-card { display: none; } }
+
+    /* ---------- LOGOS / INTEGRAÇÕES ---------- */
+    .logos { padding: 40px 0 10px; }
+    .logos p { text-align: center; color: var(--cinza-2); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+    .logos-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 30px; margin-top: 22px; }
+    .logos-row .org {
+      display: inline-flex; align-items: center; gap: 9px; color: #c3cde8; font-weight: 700; font-size: 15px;
+      opacity: .72; transition: opacity .2s; padding: 8px 14px; border: 1px solid var(--borda); border-radius: 10px;
+      background: rgba(255,255,255,.02);
+    }
+    .logos-row .org:hover { opacity: 1; }
+    .logos-row .org svg { width: 18px; height: 18px; }
+
+    /* ---------- STATS ---------- */
+    .stats { padding: 70px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    @media (max-width: 860px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+    .stat {
+      background: linear-gradient(160deg, var(--escuro-2), rgba(17,25,53,.4));
+      border: 1px solid var(--borda); border-radius: 16px; padding: 26px 22px; text-align: center;
+    }
+    .stat .num { font-size: clamp(30px, 4vw, 42px); font-weight: 900; letter-spacing: -.02em;
+      background: linear-gradient(120deg, #fff, var(--azul-neon)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat .lbl { color: var(--cinza); font-size: 13.5px; margin-top: 8px; line-height: 1.45; }
+
+    /* ---------- SECTION HEADERS ---------- */
+    .sec-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+    .tag {
+      display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--azul-neon); background: rgba(58,120,255,.1); border: 1px solid rgba(58,120,255,.25);
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .sec-head h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 900; margin-top: 18px; letter-spacing: -.02em; line-height: 1.1; }
+    .sec-head p { color: var(--cinza); font-size: 17px; line-height: 1.6; margin-top: 16px; }
+
+    /* ---------- FEATURES ---------- */
+    .features { padding: 80px 0; }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .feat-grid { grid-template-columns: 1fr; } }
+    .feat {
+      background: linear-gradient(165deg, var(--escuro-2), rgba(11,16,32,.4));
+      border: 1px solid var(--borda); border-radius: 18px; padding: 30px 26px;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .feat:hover { transform: translateY(-6px); border-color: rgba(122,162,255,.4); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+    .feat-ic {
+      width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--azul), #6b2bd6); margin-bottom: 18px;
+      box-shadow: 0 10px 26px rgba(16,79,212,.45);
+    }
+    .feat-ic svg { width: 26px; height: 26px; stroke: #fff; }
+    .feat h3 { font-size: 19px; font-weight: 700; }
+    .feat p { color: var(--cinza); font-size: 14.5px; line-height: 1.6; margin-top: 10px; }
+
+    /* ---------- PRODUTO / COMO FUNCIONA ---------- */
+    .steps { padding: 80px 0; background: linear-gradient(180deg, transparent, rgba(17,25,53,.35), transparent); }
+    .step-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; counter-reset: s; }
+    @media (max-width: 900px) { .step-grid { grid-template-columns: 1fr; } }
+    .step { position: relative; padding: 28px; border: 1px solid var(--borda); border-radius: 18px; background: rgba(11,16,32,.5); }
+    .step::before {
+      counter-increment: s; content: counter(s, decimal-leading-zero);
+      font-size: 14px; font-weight: 800; color: var(--azul-neon);
+      border: 1px solid rgba(122,162,255,.4); border-radius: 8px; padding: 4px 9px; display: inline-block; margin-bottom: 16px;
+    }
+    .step h3 { font-size: 18px; font-weight: 700; }
+    .step p { color: var(--cinza); font-size: 14.5px; line-height: 1.6; margin-top: 9px; }
+
+    /* ---------- PRODUTOS SHOWCASE ---------- */
+    .products { padding: 80px 0; }
+    .prod-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media (max-width: 900px) { .prod-grid { grid-template-columns: 1fr; } }
+    .prod {
+      border: 1px solid var(--borda); border-radius: 18px; overflow: hidden;
+      background: linear-gradient(165deg, var(--escuro-2), rgba(11,16,32,.5));
+    }
+    .prod .top { height: 160px; position: relative; display: grid; place-items: center;
+      background: radial-gradient(120% 120% at 50% 0%, #1b2a55, #0a1124); }
+    .prod .top svg { width: 64px; height: 64px; stroke: var(--azul-neon); opacity: .9; }
+    .prod .body { padding: 24px; }
+    .prod h3 { font-size: 19px; font-weight: 700; }
+    .prod p { color: var(--cinza); font-size: 14.5px; line-height: 1.6; margin-top: 9px; }
+    .prod .badge { font-size: 11px; font-weight: 700; color: var(--azul-neon); text-transform: uppercase; letter-spacing: .1em; }
+
+    /* ---------- COBERTURA ---------- */
+    .coverage { padding: 80px 0; }
+    .cov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    @media (max-width: 900px) { .cov-grid { grid-template-columns: 1fr; } }
+    .cov-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .cov-list span { font-size: 13px; font-weight: 600; color: #c3cde8; padding: 8px 14px; border: 1px solid var(--borda); border-radius: 999px; background: rgba(255,255,255,.02); }
+    .cov-card {
+      aspect-ratio: 1/1; border-radius: 20px; border: 1px solid var(--borda); position: relative; overflow: hidden;
+      background:
+        radial-gradient(40% 40% at 30% 30%, rgba(58,120,255,.25), transparent 60%),
+        radial-gradient(35% 35% at 70% 60%, rgba(107,43,214,.25), transparent 60%),
+        linear-gradient(160deg, var(--escuro-2), #070b18);
+    }
+    .cov-card .ping { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--azul-neon); }
+    .cov-card .ping::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid var(--azul-neon); animation: ping 2.4s ease-out infinite; }
+    @keyframes ping { 0% { transform: scale(.4); opacity: .8; } 100% { transform: scale(2.4); opacity: 0; } }
+
+    /* ---------- DEPOIMENTOS ---------- */
+    .testi { padding: 80px 0; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media (max-width: 900px) { .testi-grid { grid-template-columns: 1fr; } }
+    .quote {
+      background: linear-gradient(165deg, var(--escuro-2), rgba(11,16,32,.45));
+      border: 1px solid var(--borda); border-radius: 18px; padding: 28px;
+    }
+    .quote .stars { color: #ffc857; letter-spacing: 2px; font-size: 14px; }
+    .quote p { font-size: 15px; line-height: 1.65; margin: 14px 0 20px; color: #dde4f6; }
+    .quote .who { display: flex; align-items: center; gap: 12px; }
+    .quote .who .av { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--azul-claro), #6b2bd6); }
+    .quote .who b { font-size: 14px; display: block; }
+    .quote .who small { font-size: 12.5px; color: var(--cinza); }
+
+    /* ---------- FAQ ---------- */
+    .faq { padding: 80px 0; }
+    .faq-wrap { max-width: 760px; margin: 0 auto; }
+    .qa { border: 1px solid var(--borda); border-radius: 14px; margin-bottom: 12px; overflow: hidden; background: rgba(17,25,53,.4); }
+    .qa button {
+      width: 100%; text-align: left; background: none; border: 0; color: var(--branco);
+      font-size: 16px; font-weight: 600; padding: 20px 22px; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: inherit;
+    }
+    .qa button span.ic { color: var(--azul-neon); font-size: 22px; transition: transform .25s; flex-shrink: 0; }
+    .qa.open button span.ic { transform: rotate(45deg); }
+    .qa .ans { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .qa .ans p { color: var(--cinza); font-size: 14.5px; line-height: 1.65; padding: 0 22px 20px; }
+
+    /* ---------- CTA FINAL ---------- */
+    .cta-final { padding: 90px 0; }
+    .cta-box {
+      position: relative; overflow: hidden; text-align: center;
+      border: 1px solid rgba(122,162,255,.3); border-radius: 26px; padding: 64px 28px;
+      background:
+        radial-gradient(60% 100% at 50% 0%, rgba(58,120,255,.25), transparent 70%),
+        linear-gradient(160deg, var(--escuro-2), #070b18);
+    }
+    .cta-box h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -.02em; }
+    .cta-box p { color: var(--cinza); font-size: 17px; max-width: 48ch; margin: 16px auto 30px; line-height: 1.6; }
+    .cta-box .hero-cta { justify-content: center; }
+
+    /* ---------- FOOTER ---------- */
+    footer.ft { border-top: 1px solid var(--borda); padding: 56px 0 30px; }
+    .ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px; }
+    @media (max-width: 760px) { .ft-grid { grid-template-columns: 1fr 1fr; gap: 30px; } }
+    .ft-grid img { height: 28px; width: auto; }
+    .ft-grid p { color: var(--cinza); font-size: 13.5px; line-height: 1.6; margin-top: 16px; max-width: 32ch; }
+    .ft-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--cinza-2); margin-bottom: 14px; }
+    .ft-col a { display: block; color: var(--cinza); font-size: 14px; margin-bottom: 10px; transition: color .2s; }
+    .ft-col a:hover { color: var(--branco); }
+    .ft-bottom { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--borda); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--cinza-2); font-size: 13px; }
+
+    /* ---------- REVEAL ---------- */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <img class="logo" src="/assets/seevia_branco.png" alt="Seevia" />
 
-    <span class="badge"><span class="dot"></span> Em breve</span>
-
-    <h1>A câmera que <span class="grad">vê o ladrão</span> antes dele agir.</h1>
-
-    <p class="sub">
-      Seevia une câmeras e inteligência artificial para vigiar o que importa,
-      reconhecer ameaças em tempo real e avisar você na hora certa.
-      Estamos finalizando os detalhes — em breve no ar.
-    </p>
-
-    <div class="cta">
-      <a class="btn btn-wa" href="https://wa.me/5562985673142?text=Quero%20saber%20mais%20sobre%20a%20Seevia" target="_blank" rel="noopener">
-        Falar no WhatsApp
-      </a>
-      <a class="btn btn-ghost" href="mailto:contato@seevia.com.br">contato@seevia.com.br</a>
+  <!-- BANNER VALE DO SILÍCIO -->
+  <div class="silicon-banner" aria-label="Tecnologia importada direto do Vale do Silício">
+    <div class="silicon-track">
+      <span>🚀 Tecnologia importada direto do Vale do Silício</span>
+      <span>IA de reconhecimento em tempo real</span>
+      <span>🚀 Tecnologia importada direto do Vale do Silício</span>
+      <span>Visão computacional de última geração</span>
+      <!-- duplicado para loop contínuo -->
+      <span>🚀 Tecnologia importada direto do Vale do Silício</span>
+      <span>IA de reconhecimento em tempo real</span>
+      <span>🚀 Tecnologia importada direto do Vale do Silício</span>
+      <span>Visão computacional de última geração</span>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    © 2026 Seevia · Tecnologia de câmeras com IA · seevia.com.br
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="nav-logo" href="#topo"><img src="/assets/seevia_branco.png" alt="Seevia" /></a>
+      <nav class="nav-links">
+        <a href="#como">Como funciona</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#cobertura">Cobertura</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#faq">Dúvidas</a>
+      </nav>
+      <a class="nav-cta" href="https://wa.me/5562985673142?text=Quero%20conhecer%20a%20Seevia" target="_blank" rel="noopener">Falar com a Seevia</a>
+      <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').style.display='flex'">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="topo">
+    <div class="container hero-grid">
+      <div>
+        <span class="pill-live"><span class="dot"></span> Central de inteligência ativa 24h</span>
+        <h1>A câmera que <span class="grad">vê o ladrão</span> antes dele agir.</h1>
+        <p class="sub">
+          A Seevia é a rede de câmeras inteligentes que une visão computacional e IA
+          para ler placas, reconhecer ameaças em tempo real e avisar você e as
+          autoridades <strong>na hora certa</strong> — antes do crime acontecer.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://wa.me/5562985673142?text=Quero%20proteger%20meu%20bairro%20com%20a%20Seevia" target="_blank" rel="noopener">
+            Proteger meu bairro →
+          </a>
+          <a class="btn btn-ghost" href="#como">Ver como funciona</a>
+        </div>
+        <div class="hero-trust">
+          <div class="avatars"><span></span><span></span><span></span><span></span></div>
+          <div><span class="stars">★★★★★</span> &nbsp;mais de <strong>320 condomínios</strong> protegidos</div>
+        </div>
+      </div>
+
+      <div class="hero-cam">
+        <div class="cam-feed">
+          <div class="cam-top">
+            <span class="rec"><b></b> AO VIVO · CAM 04</span>
+            <span>14 JUN · 22:41:07</span>
+          </div>
+          <div class="scanbox"></div>
+        </div>
+        <div class="cam-strip">
+          <span class="ai"><b></b> SEEVIA AI</span>
+          <span>analisando 6 objetos · 2 placas · 0 falsos positivos</span>
+        </div>
+        <div class="float-card">
+          <div class="t">⚡ Alerta enviado em</div>
+          <div class="v">1,8 segundo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGOS -->
+  <section class="logos">
+    <div class="container">
+      <p>Integrada com órgãos de segurança e parceiros</p>
+      <div class="logos-row reveal">
+        <span class="org">🛡️ Polícia Militar</span>
+        <span class="org">🚔 Guarda Municipal</span>
+        <span class="org">📡 SAMU Conectado</span>
+        <span class="org">🏛️ Defesa Civil</span>
+        <span class="org">🔗 Detran Integrado</span>
+        <span class="org">🏢 ABComp</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="container stats-grid">
+      <div class="stat reveal"><div class="num" data-count="1200000000" data-suffix="">0</div><div class="lbl">placas lidas por ano pela rede Seevia</div></div>
+      <div class="stat reveal"><div class="num" data-count="1" data-suffix="/min">0</div><div class="lbl">alerta de veículo suspeito enviado por minuto</div></div>
+      <div class="stat reveal"><div class="num" data-count="5" data-suffix="x">0</div><div class="lbl">mais chances de resolução de ocorrências</div></div>
+      <div class="stat reveal"><div class="num" data-count="98" data-suffix="%">0</div><div class="lbl">de precisão da IA no reconhecimento de ameaças</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="recursos">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Por que Seevia</span>
+        <h2>Inteligência que enxerga o que o olho humano não vê</h2>
+        <p>Câmeras comuns só gravam o crime. A Seevia entende a cena, identifica o risco e age antes — com tecnologia treinada no Vale do Silício.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Visão computacional 24h</h3>
+          <p>A IA analisa cada quadro em tempo real e diferencia um morador de uma ameaça real, eliminando falsos alarmes.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h2M11 10h6M7 14h10"/></svg></div>
+          <h3>Leitura automática de placas</h3>
+          <p>Reconhecimento de placas (LPR) cruzado com bases de veículos procurados. Carro clonado ou roubado dispara alerta na hora.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v6M12 22a8 8 0 1 0 0-16"/><path d="m9 13 2 2 4-4"/></svg></div>
+          <h3>Alerta antes do crime</h3>
+          <p>Comportamento suspeito detectado? Você e a central recebem o aviso em segundos, com imagem e localização exata.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></div>
+          <h3>Sem reconhecimento facial</h3>
+          <p>Privacidade em primeiro lugar: a Seevia analisa contexto e comportamento, não identidade. 100% dentro da LGPD.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h3>Conectada às autoridades</h3>
+          <p>Rede integrada à Polícia Militar e Guarda Municipal. A ocorrência chega para quem pode agir, com prova em vídeo.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+          <h3>App na palma da mão</h3>
+          <p>Acompanhe tudo pelo celular: câmeras ao vivo, alertas, histórico e botão de pânico ligado direto à central Seevia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="steps" id="como">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Como funciona</span>
+        <h2>Da câmera ao alerta em 3 passos</h2>
+        <p>Tecnologia complexa, experiência simples. A Seevia cuida de tudo de ponta a ponta.</p>
+      </div>
+      <div class="step-grid">
+        <div class="step reveal">
+          <h3>Captura inteligente</h3>
+          <p>Instalamos câmeras Seevia nos pontos estratégicos do seu bairro ou condomínio. Elas observam 24h, em qualquer clima, dia ou noite.</p>
+        </div>
+        <div class="step reveal">
+          <h3>IA analisa em tempo real</h3>
+          <p>Nossa inteligência treinada no Vale do Silício reconhece placas, movimentos e ameaças — separando o normal do perigoso em milissegundos.</p>
+        </div>
+        <div class="step reveal">
+          <h3>Alerta e ação imediata</h3>
+          <p>Detectou risco? A central 24h confirma, aciona as autoridades e avisa você no app. Tudo registrado com vídeo como prova.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUTOS -->
+  <section class="products" id="produtos">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Ecossistema Seevia</span>
+        <h2>Hardware, central e app que trabalham juntos</h2>
+        <p>Uma plataforma completa de segurança inteligente, pensada para condomínios, bairros e cidades.</p>
+      </div>
+      <div class="prod-grid">
+        <div class="prod reveal">
+          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M2 7h13l5 3v7H2z"/><circle cx="8" cy="13" r="3"/><path d="M20 9h2v4h-2"/></svg></div>
+          <div class="body">
+            <span class="badge">Hardware</span>
+            <h3>Câmera Seevia Vision</h3>
+            <p>Câmera 4K com IA embarcada, visão noturna e leitura de placas. Discreta, resistente e à prova de vandalismo.</p>
+          </div>
+        </div>
+        <div class="prod reveal">
+          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 8h4M6 12h8"/></svg></div>
+          <div class="body">
+            <span class="badge">Operação 24h</span>
+            <h3>Central de Inteligência</h3>
+            <p>Equipe especializada monitorando os alertas da IA dia e noite, confirmando ameaças e acionando o socorro certo.</p>
+          </div>
+        </div>
+        <div class="prod reveal">
+          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+          <div class="body">
+            <span class="badge">Mobilidade</span>
+            <h3>App Seevia</h3>
+            <p>Câmeras ao vivo, alertas em tempo real, histórico de ocorrências e botão de pânico — tudo no seu bolso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COBERTURA -->
+  <section class="coverage" id="cobertura">
+    <div class="container cov-grid">
+      <div class="reveal">
+        <span class="tag">Onde estamos</span>
+        <h2 style="font-size:clamp(26px,3.4vw,38px);font-weight:900;margin-top:18px;letter-spacing:-.02em;">Uma rede que cresce a cada quarteirão</h2>
+        <p style="color:var(--cinza);font-size:16px;line-height:1.6;margin-top:14px;">
+          A Seevia já protege ruas, condomínios e bairros inteiros — e está chegando à sua cidade.
+          Quanto mais câmeras conectadas, mais inteligente e segura a rede fica para todos.
+        </p>
+        <div class="cov-list">
+          <span>📍 Goiânia</span>
+          <span>📍 Aparecida de Goiânia</span>
+          <span>📍 Brasília</span>
+          <span>📍 Uberlândia</span>
+          <span>📍 Anápolis</span>
+          <span>📍 Campinas</span>
+          <span>📍 Ribeirão Preto</span>
+          <span>📍 + 40 cidades</span>
+        </div>
+      </div>
+      <div class="cov-card reveal">
+        <div class="ping" style="left:30%;top:35%"></div>
+        <div class="ping" style="left:62%;top:28%"></div>
+        <div class="ping" style="left:48%;top:55%"></div>
+        <div class="ping" style="left:70%;top:68%"></div>
+        <div class="ping" style="left:25%;top:70%"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS RESULTADOS -->
+  <section class="stats">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Resultados reais</span>
+        <h2>Números que viram tranquilidade</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat reveal"><div class="num" data-count="320" data-suffix="+">0</div><div class="lbl">condomínios e bairros protegidos</div></div>
+        <div class="stat reveal"><div class="num" data-count="47000" data-suffix="+">0</div><div class="lbl">ocorrências analisadas pela IA</div></div>
+        <div class="stat reveal"><div class="num" data-count="1300" data-suffix="+">0</div><div class="lbl">veículos recuperados pela rede</div></div>
+        <div class="stat reveal"><div class="num" data-count="89" data-suffix="%">0</div><div class="lbl">de redução em furtos nas áreas cobertas</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section class="testi" id="depoimentos">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Quem usa, recomenda</span>
+        <h2>A segurança que mudou a rotina dos bairros</h2>
+      </div>
+      <div class="testi-grid">
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>"Em 3 meses os furtos de carro no nosso condomínio simplesmente acabaram. A central avisou a PM antes mesmo de a gente perceber o movimento estranho."</p>
+          <div class="who"><div class="av"></div><div><b>Marcos Tavares</b><small>Síndico · Res. Jardim das Acácias</small></div></div>
+        </div>
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>"O app é absurdo de fácil. Vejo todas as câmeras do celular e recebo alerta na hora. Parece tecnologia de filme, mas é real e funciona."</p>
+          <div class="who"><div class="av"></div><div><b>Patrícia Lemos</b><small>Moradora · Setor Bueno, Goiânia</small></div></div>
+        </div>
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>"A leitura de placas recuperou um carro roubado da nossa rua em menos de uma hora. A Seevia entregou o que nenhuma câmera comum entregava."</p>
+          <div class="who"><div class="av"></div><div><b>Eduardo Nunes</b><small>Presidente · Associação Vila Nova</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="tag">Dúvidas frequentes</span>
+        <h2>Tudo que você precisa saber</h2>
+      </div>
+      <div class="faq-wrap">
+        <div class="qa reveal">
+          <button onclick="toggleFaq(this)">A Seevia usa reconhecimento facial? <span class="ic">+</span></button>
+          <div class="ans"><p>Não. A Seevia analisa comportamento, objetos e placas — nunca a identidade das pessoas. Toda a operação respeita a LGPD e a privacidade dos moradores.</p></div>
+        </div>
+        <div class="qa reveal">
+          <button onclick="toggleFaq(this)">Preciso trocar minhas câmeras atuais? <span class="ic">+</span></button>
+          <div class="ans"><p>Na maioria dos casos, não. Nossa IA pode se integrar a câmeras compatíveis já instaladas. Onde for necessário, instalamos as câmeras Seevia Vision sem custo de obra surpresa.</p></div>
+        </div>
+        <div class="qa reveal">
+          <button onclick="toggleFaq(this)">Como funciona a central 24h? <span class="ic">+</span></button>
+          <div class="ans"><p>Quando a IA detecta uma ameaça, nossa equipe humana confirma o alerta em segundos e aciona quem precisa agir — você, o porteiro e as autoridades — tudo com vídeo como prova.</p></div>
+        </div>
+        <div class="qa reveal">
+          <button onclick="toggleFaq(this)">Em quanto tempo a instalação fica pronta? <span class="ic">+</span></button>
+          <div class="ans"><p>Após a visita técnica gratuita, a instalação típica de um condomínio leva de 2 a 5 dias úteis. A rede começa a proteger no mesmo dia em que é ativada.</p></div>
+        </div>
+        <div class="qa reveal">
+          <button onclick="toggleFaq(this)">Essa tecnologia é importada mesmo? <span class="ic">+</span></button>
+          <div class="ans"><p>Sim! Nossos modelos de visão computacional são desenvolvidos com tecnologia de ponta vinda direto do Vale do Silício e adaptados à realidade das cidades brasileiras.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="container">
+      <div class="cta-box reveal">
+        <span class="tag">Comece hoje</span>
+        <h2>Sua rua merece <span class="grad">enxergar o perigo</span> antes dele chegar.</h2>
+        <p>Fale com um especialista Seevia, receba uma visita técnica gratuita e descubra como proteger o que importa com inteligência de verdade.</p>
+        <div class="hero-cta">
+          <a class="btn btn-wa" href="https://wa.me/5562985673142?text=Quero%20uma%20visita%20t%C3%A9cnica%20gratuita%20da%20Seevia" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a class="btn btn-ghost" href="mailto:contato@seevia.com.br">contato@seevia.com.br</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="ft">
+    <div class="container">
+      <div class="ft-grid">
+        <div>
+          <img src="/assets/seevia_branco.png" alt="Seevia" />
+          <p>Câmeras com inteligência artificial que veem o crime antes dele acontecer. Tecnologia importada direto do Vale do Silício.</p>
+        </div>
+        <div class="ft-col">
+          <h4>Produto</h4>
+          <a href="#recursos">Recursos</a>
+          <a href="#como">Como funciona</a>
+          <a href="#produtos">Câmeras & App</a>
+          <a href="#cobertura">Cobertura</a>
+        </div>
+        <div class="ft-col">
+          <h4>Empresa</h4>
+          <a href="#depoimentos">Depoimentos</a>
+          <a href="#faq">Dúvidas</a>
+          <a href="mailto:contato@seevia.com.br">Trabalhe conosco</a>
+          <a href="mailto:imprensa@seevia.com.br">Imprensa</a>
+        </div>
+        <div class="ft-col">
+          <h4>Contato</h4>
+          <a href="https://wa.me/5562985673142" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="mailto:contato@seevia.com.br">contato@seevia.com.br</a>
+          <a href="#topo">Voltar ao topo</a>
+        </div>
+      </div>
+      <div class="ft-bottom">
+        <span>© 2026 Seevia · Tecnologia de câmeras com IA · seevia.com.br</span>
+        <span>Feito com 💙 e dados protegidos pela LGPD</span>
+      </div>
+    </div>
   </footer>
+
+  <script>
+    // FAQ accordion
+    function toggleFaq(btn) {
+      const qa = btn.parentElement;
+      const ans = qa.querySelector('.ans');
+      const open = qa.classList.toggle('open');
+      ans.style.maxHeight = open ? ans.scrollHeight + 'px' : 0;
+    }
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Count-up
+    function fmt(n) {
+      if (n >= 1000000000) return (n/1000000000).toFixed(n % 1000000000 ? 1 : 0) + ' bi';
+      if (n >= 1000000) return (n/1000000).toFixed(n % 1000000 ? 1 : 0) + ' mi';
+      if (n >= 1000) return Math.round(n/1000) + ' mil';
+      return Math.round(n).toLocaleString('pt-BR');
+    }
+    function countUp(el) {
+      const target = +el.dataset.count;
+      const suffix = el.dataset.suffix || '';
+      const dur = 1600; const start = performance.now();
+      function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = fmt(target) + suffix;
+      }
+      requestAnimationFrame(step);
+    }
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
+    }, { threshold: .5 });
+    document.querySelectorAll('.num[data-count]').forEach(el => cio.observe(el));
+  </script>
 </body>
 </html>
