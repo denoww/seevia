@@ -84,8 +84,21 @@
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16,79,212,.6); }
     .nav-burger { display: none; background: none; border: 0; color: #fff; font-size: 26px; cursor: pointer; }
     @media (max-width: 860px) {
-      .nav-links { display: none; }
       .nav-burger { display: block; }
+      .nav-links {
+        position: absolute; top: 72px; left: 0; right: 0;
+        flex-direction: column; gap: 0; align-items: stretch;
+        background: rgba(11,16,32,.98); backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--borda); padding: 6px 24px 18px;
+        max-height: 0; overflow: hidden; transition: max-height .3s ease; display: flex;
+      }
+      .nav-links.open { max-height: 340px; }
+      .nav-links a { padding: 15px 2px; border-bottom: 1px solid var(--borda); font-size: 15px; }
+      .nav-inner { gap: 10px; }
+      .nav-cta { padding: 9px 14px; font-size: 13px; }
+    }
+    @media (max-width: 420px) {
+      .nav-cta { display: none; }
     }
 
     /* ---------- BANNER VALE DO SILÍCIO ---------- */
@@ -175,36 +188,23 @@
       animation: float 6s ease-in-out infinite;
     }
     @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-    .cam-feed { aspect-ratio: 4/3; position: relative; background:
-      radial-gradient(120% 120% at 30% 10%, #1b2a55 0%, #0a1124 55%, #05070f 100%); }
+    .cam-feed { aspect-ratio: 3/2; position: relative; overflow: hidden;
+      background: linear-gradient(rgba(7,11,24,.18), rgba(7,11,24,.42)), url('/assets/ia_vision.jpg') center/cover no-repeat; }
     .cam-feed::after {
       content: ""; position: absolute; inset: 0;
-      background-image: linear-gradient(rgba(58,120,255,.07) 1px, transparent 1px);
-      background-size: 100% 4px; pointer-events: none; opacity: .5;
+      background-image: linear-gradient(rgba(58,120,255,.06) 1px, transparent 1px);
+      background-size: 100% 4px; pointer-events: none; opacity: .45;
     }
+    .scanline {
+      position: absolute; left: 0; right: 0; height: 2px; top: 8%;
+      background: linear-gradient(90deg, transparent, var(--azul-neon), transparent);
+      box-shadow: 0 0 18px rgba(122,162,255,.9); animation: sweep 3.6s ease-in-out infinite;
+    }
+    @keyframes sweep { 0%,100% { top: 8%; } 50% { top: 88%; } }
     .cam-top { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; font-size: 11px; color: #aebbe0; font-weight: 600; letter-spacing: .05em; }
     .rec { display: inline-flex; align-items: center; gap: 6px; color: #ff6b6b; }
     .rec b { width: 8px; height: 8px; background: #ff4d4d; border-radius: 50%; animation: pulse-red 1.4s infinite; }
     @keyframes pulse-red { 50% { opacity: .25; } }
-    .scanbox {
-      position: absolute; width: 120px; height: 78px; border: 2px solid var(--azul-neon);
-      border-radius: 6px; left: 38%; top: 42%;
-      box-shadow: 0 0 0 9999px rgba(5,7,15,.18), 0 0 24px rgba(122,162,255,.6);
-      animation: scanmove 7s ease-in-out infinite;
-    }
-    .scanbox::before {
-      content: "AMEAÇA DETECTADA"; position: absolute; top: -22px; left: -2px;
-      font-size: 9.5px; font-weight: 800; letter-spacing: .08em; color: #04210f;
-      background: var(--azul-neon); padding: 2px 7px; border-radius: 4px;
-    }
-    .scanbox::after {
-      content: "PLACA · BRA2E19"; position: absolute; bottom: -20px; left: -2px;
-      font-size: 9.5px; font-weight: 700; color: var(--azul-neon);
-    }
-    @keyframes scanmove {
-      0%,100% { left: 30%; top: 38%; }
-      50% { left: 50%; top: 50%; }
-    }
     .cam-strip { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--borda); font-size: 12px; color: var(--cinza); }
     .cam-strip .ai { display: inline-flex; align-items: center; gap: 7px; color: var(--azul-neon); font-weight: 700; }
     .cam-strip .ai b { width: 7px; height: 7px; border-radius: 50%; background: var(--azul-neon); animation: pulse-red 1.6s infinite; }
@@ -292,9 +292,10 @@
       border: 1px solid var(--borda); border-radius: 18px; overflow: hidden;
       background: linear-gradient(165deg, var(--escuro-2), rgba(11,16,32,.5));
     }
-    .prod .top { height: 160px; position: relative; display: grid; place-items: center;
-      background: radial-gradient(120% 120% at 50% 0%, #1b2a55, #0a1124); }
-    .prod .top svg { width: 64px; height: 64px; stroke: var(--azul-neon); opacity: .9; }
+    .prod .top { height: 190px; position: relative; overflow: hidden; background: #0a1124; }
+    .prod .top img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+    .prod:hover .top img { transform: scale(1.05); }
+    .prod .top::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(11,16,32,.85)); }
     .prod .body { padding: 24px; }
     .prod h3 { font-size: 19px; font-weight: 700; }
     .prod p { color: var(--cinza); font-size: 14.5px; line-height: 1.6; margin-top: 9px; }
@@ -307,11 +308,8 @@
     .cov-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .cov-list span { font-size: 13px; font-weight: 600; color: #c3cde8; padding: 8px 14px; border: 1px solid var(--borda); border-radius: 999px; background: rgba(255,255,255,.02); }
     .cov-card {
-      aspect-ratio: 1/1; border-radius: 20px; border: 1px solid var(--borda); position: relative; overflow: hidden;
-      background:
-        radial-gradient(40% 40% at 30% 30%, rgba(58,120,255,.25), transparent 60%),
-        radial-gradient(35% 35% at 70% 60%, rgba(107,43,214,.25), transparent 60%),
-        linear-gradient(160deg, var(--escuro-2), #070b18);
+      aspect-ratio: 4/3; border-radius: 20px; border: 1px solid var(--borda); position: relative; overflow: hidden;
+      background: linear-gradient(150deg, rgba(11,16,32,.35), rgba(11,16,32,.65)), url('/assets/hero.jpg') center/cover no-repeat;
     }
     .cov-card .ping { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--azul-neon); }
     .cov-card .ping::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid var(--azul-neon); animation: ping 2.4s ease-out infinite; }
@@ -374,6 +372,32 @@
     .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.in { opacity: 1; transform: none; }
 
+    /* ---------- AJUSTES MOBILE ---------- */
+    @media (max-width: 960px) {
+      .hero { padding: 64px 0 48px; }
+      .hero-grid { text-align: center; }
+      .hero .pill-live, .hero-cta, .hero-trust { justify-content: center; }
+      .hero p.sub { margin-left: auto; margin-right: auto; }
+      .hero-cam { max-width: 540px; margin: 0 auto; width: 100%; }
+      .features, .steps, .products, .coverage, .testi, .faq, .stats { padding: 60px 0; }
+      .cta-final { padding: 64px 0; }
+      .sec-head { margin-bottom: 40px; }
+    }
+    @media (max-width: 600px) {
+      .silicon-track span { font-size: 11px; letter-spacing: .08em; gap: 8px; }
+      .silicon-track { gap: 34px; }
+      .container { padding: 0 18px; }
+      .hero h1 { font-size: clamp(30px, 8.5vw, 44px); }
+      .stat { padding: 20px 14px; }
+      .feat, .step, .quote, .prod .body { padding: 22px; }
+      .float-card { right: 8px; bottom: 64px; }
+      .cta-box { padding: 44px 20px; }
+      .hero-trust { flex-direction: column; gap: 10px; }
+    }
+    @media (max-width: 380px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
       .reveal { opacity: 1; transform: none; }
@@ -409,7 +433,7 @@
         <a href="#faq">Dúvidas</a>
       </nav>
       <a class="nav-cta" href="https://wa.me/5562985673142?text=Quero%20conhecer%20a%20Seevia" target="_blank" rel="noopener">Falar com a Seevia</a>
-      <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').style.display='flex'">☰</button>
+      <button class="nav-burger" aria-label="Menu" aria-expanded="false" onclick="toggleMenu(this)">☰</button>
     </div>
   </header>
 
@@ -442,7 +466,7 @@
             <span class="rec"><b></b> AO VIVO · CAM 04</span>
             <span>14 JUN · 22:41:07</span>
           </div>
-          <div class="scanbox"></div>
+          <div class="scanline"></div>
         </div>
         <div class="cam-strip">
           <span class="ai"><b></b> SEEVIA AI</span>
@@ -559,7 +583,7 @@
       </div>
       <div class="prod-grid">
         <div class="prod reveal">
-          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M2 7h13l5 3v7H2z"/><circle cx="8" cy="13" r="3"/><path d="M20 9h2v4h-2"/></svg></div>
+          <div class="top"><img src="/assets/camera.jpg" alt="Câmera Seevia Vision com IA embarcada" loading="lazy" /></div>
           <div class="body">
             <span class="badge">Hardware</span>
             <h3>Câmera Seevia Vision</h3>
@@ -567,7 +591,7 @@
           </div>
         </div>
         <div class="prod reveal">
-          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 8h4M6 12h8"/></svg></div>
+          <div class="top"><img src="/assets/central.jpg" alt="Central de inteligência Seevia monitorando 24h" loading="lazy" /></div>
           <div class="body">
             <span class="badge">Operação 24h</span>
             <h3>Central de Inteligência</h3>
@@ -575,7 +599,7 @@
           </div>
         </div>
         <div class="prod reveal">
-          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+          <div class="top"><img src="/assets/app.jpg" alt="App Seevia com câmeras ao vivo e alertas" loading="lazy" /></div>
           <div class="body">
             <span class="badge">Mobilidade</span>
             <h3>App Seevia</h3>
@@ -744,6 +768,19 @@
   </footer>
 
   <script>
+    // Menu mobile
+    function toggleMenu(btn) {
+      const links = document.querySelector('.nav-links');
+      const open = links.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open);
+      btn.textContent = open ? '✕' : '☰';
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      const links = document.querySelector('.nav-links');
+      const btn = document.querySelector('.nav-burger');
+      links.classList.remove('open'); btn.setAttribute('aria-expanded', false); btn.textContent = '☰';
+    }));
+
     // FAQ accordion
     function toggleFaq(btn) {
       const qa = btn.parentElement;
