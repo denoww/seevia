@@ -2,3 +2,5 @@
 *.log
 node_modules/
 .amplify/
+__pycache__/
+livreto/_preview.html
